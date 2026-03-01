@@ -1,3 +1,141 @@
+// Firebase Integration
+let firebaseDB, firebaseStorage, firebaseAnalytics;
+
+// Wait for Firebase to be initialized
+document.addEventListener('DOMContentLoaded', () => {
+    // Check if Firebase is available
+    if (window.firebaseDB) {
+        firebaseDB = window.firebaseDB;
+        firebaseStorage = window.firebaseStorage;
+        firebaseAnalytics = window.firebaseAnalytics;
+        console.log('🔥 Firebase services ready');
+    } else {
+        console.warn('⚠️ Firebase not initialized');
+    }
+});
+
+// Save prediction result to Firebase
+function savePredictionToFirebase(predictionData) {
+    // Check if Firebase functions are available
+    if (typeof ref === 'undefined' || typeof push === 'undefined') {
+        console.warn('Firebase functions not available - skipping database save');
+        return;
+    }
+    
+    if (!firebaseDB) {
+        console.warn('Firebase DB not available');
+        return;
+    }
+
+    try {
+        const predictionsRef = ref(firebaseDB, 'predictions');
+        const newPrediction = {
+            ...predictionData,
+            timestamp: new Date().toISOString(),
+            id: Date.now().toString()
+        };
+
+        push(predictionsRef, newPrediction)
+            .then(() => {
+                console.log('✅ Prediction saved to Firebase');
+                showNotification('Prediction saved successfully!', 'success');
+            })
+            .catch((error) => {
+                console.error('❌ Error saving prediction:', error);
+                showNotification('Failed to save prediction', 'error');
+            });
+    } catch (error) {
+        console.error('❌ Firebase error:', error);
+        showNotification('Database unavailable - prediction not saved', 'error');
+    }
+}
+
+// Save contact form to Firebase
+function saveContactToFirebase(contactData) {
+    // Check if Firebase functions are available
+    if (typeof ref === 'undefined' || typeof push === 'undefined') {
+        console.warn('Firebase functions not available - skipping database save');
+        return;
+    }
+    
+    if (!firebaseDB) {
+        console.warn('Firebase DB not available');
+        return;
+    }
+
+    try {
+        const contactsRef = ref(firebaseDB, 'contacts');
+        const newContact = {
+            ...contactData,
+            timestamp: new Date().toISOString(),
+            id: Date.now().toString()
+        };
+
+        push(contactsRef, newContact)
+            .then(() => {
+                console.log('✅ Contact saved to Firebase');
+                showNotification('Message saved to database!', 'success');
+            })
+            .catch((error) => {
+                console.error('❌ Error saving contact:', error);
+                showNotification('Failed to save message', 'error');
+            });
+    } catch (error) {
+        console.error('❌ Firebase error:', error);
+        showNotification('Database unavailable - message not saved', 'error');
+    }
+}
+
+// Show notification
+function showNotification(message, type) {
+    const notification = document.createElement('div');
+    notification.className = `fixed top-4 right-4 p-4 rounded-lg shadow-xl z-50 animate-slide-in ${
+        type === 'success' 
+            ? 'bg-green-500 text-white' 
+            : 'bg-red-500 text-white'
+    }`;
+    notification.textContent = message;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.remove();
+    }, 3000);
+}
+
+// Get predictions from Firebase
+function getPredictionsFromFirebase() {
+    if (!firebaseDB) return Promise.resolve([]);
+    
+    const predictionsRef = ref(firebaseDB, 'predictions');
+    
+    return new Promise((resolve) => {
+        // Note: In a real app, you'd use onValue() for real-time updates
+        // For demo purposes, we'll simulate getting recent predictions
+        const mockPredictions = [
+            {
+                id: '1',
+                attendance: 85,
+                interaction: 12,
+                quizScore: 78,
+                engagementLevel: 'High',
+                confidence: 92,
+                timestamp: new Date(Date.now() - 86400000).toISOString()
+            },
+            {
+                id: '2',
+                attendance: 70,
+                interaction: 8,
+                quizScore: 65,
+                engagementLevel: 'Medium',
+                confidence: 78,
+                timestamp: new Date(Date.now() - 172800000).toISOString()
+            }
+        ];
+        resolve(mockPredictions);
+    });
+}
+
 // Decision Tree Algorithm for Engagement Prediction
 class EngagementPredictor {
     constructor() {
@@ -132,6 +270,15 @@ form?.addEventListener('submit', (e) => {
 
 function displayResults(prediction, inputs) {
     const confidencePercent = Math.round(prediction.confidence * 100);
+    
+    // Save to Firebase
+    const predictionData = {
+        inputs: inputs,
+        prediction: prediction,
+        confidence: confidencePercent,
+        timestamp: new Date().toISOString()
+    };
+    savePredictionToFirebase(predictionData);
     
     resultsDiv.innerHTML = `
         <div class="space-y-6 animate-slide-in">
@@ -761,6 +908,15 @@ contactForm?.addEventListener('submit', async (e) => {
         // Show success message
         showMessage('Message sent successfully! I\'ll get back to you soon.', 'success');
         contactForm.reset();
+        
+        // Save to Firebase
+        const contactData = {
+            name: formData.get('from_name'),
+            email: formData.get('from_email'),
+            message: formData.get('message'),
+            subject: 'Contact Form Message from Website'
+        };
+        saveContactToFirebase(contactData);
         
     } catch (error) {
         console.error('EmailJS Error:', error);
