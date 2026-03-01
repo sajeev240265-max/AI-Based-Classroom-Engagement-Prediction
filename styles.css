@@ -1,3 +1,161 @@
+/* Floating shapes animation for contact section */
+.floating-shapes {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.floating-shapes::before,
+.floating-shapes::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    animation: float-shapes 20s infinite ease-in-out;
+}
+
+.floating-shapes::before {
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(147, 51, 234, 0.3) 0%, transparent 70%);
+    top: -150px;
+    left: -150px;
+    animation-delay: 0s;
+}
+
+.floating-shapes::after {
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(236, 72, 153, 0.3) 0%, transparent 70%);
+    bottom: -200px;
+    right: -200px;
+    animation-delay: 10s;
+}
+
+@keyframes float-shapes {
+    0%, 100% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+    33% {
+        transform: translate(100px, -100px) rotate(120deg);
+    }
+    66% {
+        transform: translate(-100px, 100px) rotate(240deg);
+    }
+}
+
+/* Contact theme transitions */
+#contact {
+    transition: background 0.8s ease;
+}
+
+#contact .bg-gradient-to-br {
+    transition: background 0.8s ease;
+}
+
+/* Enhanced contact section styling */
+#contact .rounded-3xl {
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+}
+
+#contact .group:hover {
+    transform: translateX(5px);
+}
+
+/* Grid pattern for about section */
+.bg-grid-pattern {
+    background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+    background-size: 50px 50px;
+}
+
+/* Remove scroll animation from about section */
+#about {
+    animation: none !important;
+}
+
+/* About section specific styles */
+#about .transform {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+#about .transform:hover {
+    transform: scale(1.05) translateY(-5px);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+}
+
+/* Footer theme styles */
+.footer-gradient-bg {
+    background: linear-gradient(135deg, #1e3a8a 0%, #312e81 50%, #581c87 100%);
+    transition: background 0.8s ease;
+}
+
+.footer-pattern-overlay {
+    position: absolute;
+    inset: 0;
+    opacity: 0.1;
+    background-image: 
+        repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255,255,255,.1) 35px, rgba(255,255,255,.1) 70px),
+        repeating-linear-gradient(-45deg, transparent, transparent 35px, rgba(255,255,255,.05) 35px, rgba(255,255,255,.05) 70px);
+    animation: footer-pattern-move 20s linear infinite;
+}
+
+@keyframes footer-pattern-move {
+    0% {
+        transform: translate(0, 0);
+    }
+    100% {
+        transform: translate(70px, 70px);
+    }
+}
+
+/* Footer theme transitions */
+#main-footer {
+    transition: all 0.8s ease;
+}
+
+#main-footer .footer-text {
+    transition: color 0.5s ease;
+}
+
+#main-footer .footer-link {
+    transition: color 0.3s ease;
+}
+
+#main-footer .border-t {
+    transition: border-color 0.8s ease;
+}
+
+/* Footer social icons hover effect */
+#main-footer .hover\:bg-opacity-30:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+/* Footer theme specific styles */
+.footer-dark-blue {
+    background: linear-gradient(135deg, #1e3a8a 0%, #312e81 50%, #581c87 100%);
+}
+
+.footer-purple-haze {
+    background: linear-gradient(135deg, #581c87 0%, #6b21a8 50%, #831843 100%);
+}
+
+.footer-green-forest {
+    background: linear-gradient(135deg, #14532d 0%, #166534 50%, #134e4a 100%);
+}
+
+.footer-red-velvet {
+    background: linear-gradient(135deg, #7f1d1d 0%, #9a3412 50%, #7c2d12 100%);
+}
+
+.footer-gray-scale {
+    background: linear-gradient(135deg, #374151 0%, #1f2937 50%, #111827 100%);
+}
+
 /* Custom animations and styles */
 @keyframes float {
     0%, 100% { transform: translateY(0px); }
